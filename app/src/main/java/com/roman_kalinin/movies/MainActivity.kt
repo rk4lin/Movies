@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import com.roman_kalinin.movies.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -22,22 +23,30 @@ class MainActivity : AppCompatActivity() {
         binding.recyclerview.adapter = adapter
 
         viewModel = ViewModelProvider(this, MyViewModelFactory(mainRepository)).get(MainViewModel::class.java)
-        viewModel.movieList.observe(this, {
-            adapter.setMovieList(it)
-        })
-        viewModel.errorMessage.observe(this, {
-            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
-        })
-
-        viewModel.loading.observe(this, Observer {
-           /* if (it) {
-                binding.progressDialog.visibility = View.VISIBLE
-            } else {
-                binding.progressDialog.visibility = View.GONE
-            }*/
-        })
-
+        subscribeChangeViewState()
         viewModel.getAllMovies()
 
+
+    }
+
+    private fun updateViewState(viewState: ViewState?){
+        if(viewState ==  null) return
+        when(viewState){
+            is ViewState.NoData -> {
+               // binding.noDataMessage.text = "Нет данных"
+            }
+            is ViewState.Loaded ->{
+                //binding.loadDataMessage.text = "Загрузка данных"
+            }
+            is ViewState.Movies->{
+                binding.recyclerview.visibility = View.VISIBLE
+                adapter.submitList(viewState.data)
+            }
+
+        }
+    }
+
+    private fun subscribeChangeViewState(){
+        viewModel.movieList.asLiveData().observe(this, ::updateViewState)
     }
 }
