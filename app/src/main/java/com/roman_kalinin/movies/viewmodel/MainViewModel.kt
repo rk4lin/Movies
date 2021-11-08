@@ -1,12 +1,10 @@
-package com.roman_kalinin.movies
+package com.roman_kalinin.movies.viewmodel
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.roman_kalinin.movies.repository.MainRepository
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-
-import okhttp3.Dispatcher
 
 class MainViewModel(private val mainRepository: MainRepository) : ViewModel()  {
 

@@ -1,13 +1,17 @@
-package com.roman_kalinin.movies
+package com.roman_kalinin.movies.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import com.roman_kalinin.movies.databinding.ActivityMainBinding
+import com.roman_kalinin.movies.network.RetrofitService
+import com.roman_kalinin.movies.repository.MainRepository
+import com.roman_kalinin.movies.view.adpter.MainAdapter
+import com.roman_kalinin.movies.viewmodel.MainViewModel
+import com.roman_kalinin.movies.viewmodel.MyViewModelFactory
+import com.roman_kalinin.movies.viewmodel.ViewState
 
 class MainActivity : AppCompatActivity() {
     lateinit var viewModel: MainViewModel
@@ -38,7 +42,7 @@ class MainActivity : AppCompatActivity() {
             is ViewState.Loaded ->{
                 //binding.loadDataMessage.text = "Загрузка данных"
             }
-            is ViewState.Movies->{
+            is ViewState.Movies ->{
                 binding.recyclerview.visibility = View.VISIBLE
                 adapter.submitList(viewState.data)
             }

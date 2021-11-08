@@ -1,4 +1,4 @@
-package com.roman_kalinin.movies
+package com.roman_kalinin.movies.domain
 
 import com.google.gson.annotations.SerializedName
 

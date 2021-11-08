@@ -1,8 +1,10 @@
-package com.roman_kalinin.movies
+package com.roman_kalinin.movies.view.adpter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import com.roman_kalinin.movies.view.holder.MainViewHolder
+import com.roman_kalinin.movies.domain.Movie
 
 class MainAdapter : ListAdapter<Movie, MainViewHolder>(ITEM_COMPARATOR) {
 

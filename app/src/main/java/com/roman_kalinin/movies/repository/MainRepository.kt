@@ -1,7 +1,8 @@
-package com.roman_kalinin.movies
+package com.roman_kalinin.movies.repository
 
 import android.util.Log
-import okhttp3.internal.wait
+import com.roman_kalinin.movies.domain.Movie
+import com.roman_kalinin.movies.network.RetrofitService
 import okio.IOException
 
 class MainRepository(private val retrofitService: RetrofitService) {
