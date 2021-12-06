@@ -46,6 +46,11 @@ class MainActivity : AppCompatActivity() {
                 binding.recyclerview.visibility = View.VISIBLE
                 adapter.submitList(viewState.data)
             }
+            is ViewState.ConnectionError ->{
+                binding.recyclerview.visibility = View.GONE
+                binding.errorMessage.visibility = View.VISIBLE
+                binding.errorMessage.text = "Соедиенние отсутствует"
+            }
 
         }
     }
