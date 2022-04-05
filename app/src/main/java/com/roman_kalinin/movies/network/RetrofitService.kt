@@ -8,16 +8,20 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 
-interface RetrofitService {
+
+interface MoviesApi{
     @GET("movielist.json")
     suspend fun getAllMovies() : Response<List<Movie>>
+}
+
+interface RetrofitService {
 
     companion object{
 
-        var retrofitService: RetrofitService? = null
+        var retrofitService: MoviesApi? = null
 
 
-        fun getInstance(): RetrofitService {
+        fun getInstance(): MoviesApi {
 
             var interceptor = HttpLoggingInterceptor()
             interceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -31,7 +35,7 @@ interface RetrofitService {
                     .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
-                retrofitService = retrofit.create(RetrofitService::class.java)
+                retrofitService = retrofit.create(MoviesApi::class.java)
 
             }
 

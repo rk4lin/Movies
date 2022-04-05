@@ -14,9 +14,9 @@ interface MoviesDao {
     @Query("select * from movies")
     fun getMovies() : List<Movies>
 
-    @Insert
-    fun insertMovies(movies: List<Movies>): Long
+    /*@Insert
+    fun insertMovies(movies: List<Movies>?): Long*/
 
-    @Delete
-    fun deleteMovies()
+/*    @Delete
+    fun deleteMovies()*/
 }

@@ -2,18 +2,9 @@ package com.roman_kalinin.movies
 
 import android.app.Application
 import android.content.Context
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class MoviesApplication : Application() {
 
-    init {
-        instance = this
-    }
-
-    companion object {
-        private var instance: MoviesApplication? = null
-
-        fun applicationContext(): Context {
-           return instance!!.applicationContext
-        }
-    }
 }

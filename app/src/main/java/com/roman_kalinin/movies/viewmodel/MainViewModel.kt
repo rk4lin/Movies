@@ -6,13 +6,19 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.roman_kalinin.movies.MoviesApplication
 import com.roman_kalinin.movies.repository.MainRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import javax.inject.Inject
 
-class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val mainRepository: MainRepository
+    ) : ViewModel() {
 
     private val _movieList = MutableStateFlow<ViewState>(ViewState.Loaded)
     val movieList: StateFlow<ViewState> = _movieList
@@ -20,9 +26,7 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
     var job: Job? = null
 
     fun getAllMovies() {
-
-        val check = isOnline(MoviesApplication.applicationContext())
-
+/*
         job = CoroutineScope(Dispatchers.IO).launch {
             if (check) {
 
@@ -34,6 +38,15 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
                 }
             } else {
                 _movieList.emit(ViewState.ConnectionError)
+            }
+        }*/
+        viewModelScope.launch {
+            val result = mainRepository.getMovies()
+            if(result.isSuccessful  && result.body()!=null){
+                _movieList.emit(ViewState.Movies(result.body()))
+            }
+            else {
+                _movieList.emit(ViewState.Movies(listOf()))
             }
         }
 
