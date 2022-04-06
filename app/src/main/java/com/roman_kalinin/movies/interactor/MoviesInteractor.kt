@@ -42,8 +42,7 @@ class MoviesInteractor @Inject constructor(
                 return result.body()
             }
         }
-        //TODO надо бы как то подругому реализовать данный метод что
-      return listOf()
+      return null
     }
 
     private suspend fun getMoviesFromRepository() : Response<List<Movie>> {
