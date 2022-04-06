@@ -13,7 +13,7 @@ abstract class MoviesDataBase : RoomDatabase() {
 
 abstract fun moviesDao() : MoviesDao
 
-    companion object{
+    /*companion object{
 
         @Volatile private var instance: MoviesDataBase? = null
         private val LOCK = Any()
@@ -23,7 +23,7 @@ abstract fun moviesDao() : MoviesDao
         }
 
         private fun buildDatabase(context: Context) = Room.databaseBuilder(context,
-            MoviesDataBase::class.java, "movies.db")
+            MoviesDataBase::class.java, "movies")
             .build()
-    }
+    }*/
 }

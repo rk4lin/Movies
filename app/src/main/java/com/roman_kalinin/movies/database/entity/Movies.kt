@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity (tableName = "Movies")
 data class Movies(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    val id: Int = 0,
     val name: String,
     val imageUrl: String,
     val category: String,
@@ -14,6 +14,6 @@ data class Movies(
 )
 
 @Entity
-data class UniqueIdentityForMoovies(
+data class UniqueIdentityForMovies(
     val id: Long
 )

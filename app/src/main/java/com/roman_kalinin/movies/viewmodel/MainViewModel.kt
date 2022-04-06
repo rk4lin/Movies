@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.roman_kalinin.movies.MoviesApplication
+import com.roman_kalinin.movies.interactor.MoviesInteractor
 import com.roman_kalinin.movies.repository.MainRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
@@ -17,8 +18,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val mainRepository: MainRepository
-    ) : ViewModel() {
+    /* private val mainRepository: MainRepository*/
+    private val interactor: MoviesInteractor
+) : ViewModel() {
 
     private val _movieList = MutableStateFlow<ViewState>(ViewState.Loaded)
     val movieList: StateFlow<ViewState> = _movieList
@@ -26,28 +28,20 @@ class MainViewModel @Inject constructor(
     var job: Job? = null
 
     fun getAllMovies() {
-/*
-        job = CoroutineScope(Dispatchers.IO).launch {
-            if (check) {
 
-                val res = mainRepository.getData()
-                if (res != null) {
-                    _movieList.emit(ViewState.Movies(res))
+        job?.cancel()
+
+        job = viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                val result = interactor.getMovies(fromCache = true)
+
+                if (result != null) {
+                    _movieList.emit(ViewState.Movies(result))
                 } else {
                     _movieList.emit(ViewState.Movies(listOf()))
                 }
-            } else {
-                _movieList.emit(ViewState.ConnectionError)
             }
-        }*/
-        viewModelScope.launch {
-            val result = mainRepository.getMovies()
-            if(result.isSuccessful  && result.body()!=null){
-                _movieList.emit(ViewState.Movies(result.body()))
-            }
-            else {
-                _movieList.emit(ViewState.Movies(listOf()))
-            }
+
         }
 
     }

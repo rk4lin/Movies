@@ -1,10 +1,16 @@
 package com.roman_kalinin.movies.di
 
+import android.content.Context
+import androidx.room.Room
+import com.roman_kalinin.movies.database.MoviesDataBase
+import com.roman_kalinin.movies.database.dao.MoviesDao
+import com.roman_kalinin.movies.interactor.MoviesInteractor
 import com.roman_kalinin.movies.network.MoviesApi
 import com.roman_kalinin.movies.repository.MainRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -38,8 +44,23 @@ object MoviesModule {
     }
 
     @Provides
-    fun provideMoviesApi(retrofit : Retrofit) : MoviesApi = retrofit.create(MoviesApi::class.java)
+    fun provideMoviesApi(retrofit: Retrofit): MoviesApi = retrofit.create(MoviesApi::class.java)
 
     @Provides
-    fun provideMainRepository(moviesApi: MoviesApi) : MainRepository = MainRepository(moviesApi)
+    fun provideMainRepository(moviesApi: MoviesApi): MainRepository = MainRepository(moviesApi)
+
+    @Provides
+    fun provideMoviesInteractor(
+        moviesRepository: MainRepository,
+        dataBase: MoviesDataBase
+    ): MoviesInteractor = MoviesInteractor(moviesRepository, dataBase)
+
+    @Provides
+    fun provideDatabase(moviesDatabase: MoviesDataBase) : MoviesDao = moviesDatabase.moviesDao()
+
+    @Provides
+    @Singleton
+    fun provideMovieDatabase(@ApplicationContext context : Context) : MoviesDataBase{
+        return Room.databaseBuilder(context, MoviesDataBase::class.java, "moviebase").build()
+    }
 }
