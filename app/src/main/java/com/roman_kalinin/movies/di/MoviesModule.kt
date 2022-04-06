@@ -6,6 +6,7 @@ import com.roman_kalinin.movies.database.MoviesDataBase
 import com.roman_kalinin.movies.database.dao.MoviesDao
 import com.roman_kalinin.movies.interactor.MoviesInteractor
 import com.roman_kalinin.movies.network.MoviesApi
+import com.roman_kalinin.movies.network.NoConnectionInternet
 import com.roman_kalinin.movies.repository.MainRepository
 import dagger.Module
 import dagger.Provides
@@ -27,13 +28,14 @@ object MoviesModule {
 
     @Provides
     @Singleton
-    fun provideRetrofitInstance(BASE_URL: String): Retrofit {
+    fun provideRetrofitInstance(BASE_URL: String, @ApplicationContext context: Context): Retrofit {
 
         var interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
 
         var okHttpClient = OkHttpClient.Builder()
             .addInterceptor(interceptor)
+            .addInterceptor(NoConnectionInternet(context))
             .build()
 
         return Retrofit.Builder()

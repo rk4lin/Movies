@@ -38,10 +38,27 @@ class MainViewModel @Inject constructor(
                 if (result != null) {
                     _movieList.emit(ViewState.Movies(result))
                 } else {
-                    _movieList.emit(ViewState.Movies(listOf()))
+                    _movieList.emit(ViewState.ErrorLoading)
                 }
             }
 
+        }
+
+    }
+
+    fun manualRefreshAndGetMovies(){
+        job?.cancel()
+
+        job = viewModelScope.launch {
+            _movieList.emit(ViewState.Loaded)
+            withContext(Dispatchers.IO){
+                val result = interactor.getMovies(fromCache = false)
+                if (result != null) {
+                    _movieList.emit(ViewState.Movies(result))
+                } else {
+                    _movieList.emit(ViewState.ErrorLoading)
+                }
+            }
         }
 
     }
@@ -51,18 +68,4 @@ class MainViewModel @Inject constructor(
         job?.cancel()
     }
 
-    private fun isOnline(context: Context): Boolean {
-        val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-        val activeNetwork = connectivityManager.activeNetwork ?: return false
-        val capabilities =
-            connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
-        return when {
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-            else -> false
-        }
-    }
 }

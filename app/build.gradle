@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId "com.roman_kalinin.movies"
-        minSdk 26
+        minSdk 23
         targetSdk 30
         versionCode 1
         versionName "1.0"
@@ -51,6 +51,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0"
     implementation 'com.google.code.gson:gson:2.8.8'
+
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
     // Networking
     implementation "com.squareup.retrofit2:retrofit:2.9.0"

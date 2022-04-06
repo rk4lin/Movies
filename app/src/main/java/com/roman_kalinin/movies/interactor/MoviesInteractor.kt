@@ -17,7 +17,7 @@ class MoviesInteractor @Inject constructor(
 
       if(fromCache) {
           val result =  getMoviesFromDatabase()
-          if(result != null && result.size != 0){
+          if(result != null && result.isNotEmpty()){
               return result
           }
           else{
