@@ -4,12 +4,17 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.roman_kalinin.movies.databinding.ActivityMainBinding
 import com.roman_kalinin.movies.view.adpter.MainAdapter
 import com.roman_kalinin.movies.viewmodel.MainViewModel
 import com.roman_kalinin.movies.viewmodel.ViewState
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -32,28 +37,30 @@ class MainActivity : AppCompatActivity() {
        }
     }
 
-    private fun updateViewState(viewState: ViewState?) {
-        if (viewState == null) return
-        when (viewState) {
-            is ViewState.Loaded -> {
-            }
-            is ViewState.Movies -> {
-                binding.recyclerview.visibility = View.VISIBLE
-                adapter.submitList(viewState.data)
-            }
-            is ViewState.ErrorLoading->{
-                binding.errorMessage.text = "Произошла ошибка загрузки. Пожалуйста проверте соединение"
-            }
-            is ViewState.ConnectionError -> {
-                binding.recyclerview.visibility = View.GONE
-                binding.errorMessage.visibility = View.VISIBLE
-                binding.errorMessage.text = "Соедиенние отсутствует"
-            }
-
-        }
-    }
-
     private fun subscribeChangeViewState() {
-        viewModel.movieList.asLiveData().observe(this, ::updateViewState)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                viewModel.movieList.collect {viewState->
+                    when (viewState) {
+                        is ViewState.Loaded -> {
+                        }
+                        is ViewState.Movies -> {
+                            binding.recyclerview.visibility = View.VISIBLE
+                            adapter.submitList(viewState.data)
+                        }
+                        is ViewState.ErrorLoading->{
+                            binding.errorMessage.text = "Произошла ошибка загрузки. Пожалуйста проверте соединение"
+                        }
+                        is ViewState.ConnectionError -> {
+                            binding.recyclerview.visibility = View.GONE
+                            binding.errorMessage.visibility = View.VISIBLE
+                            binding.errorMessage.text = "Соедиенние отсутствует"
+                        }
+
+                    }
+                }
+            }
+        }
+
     }
 }
