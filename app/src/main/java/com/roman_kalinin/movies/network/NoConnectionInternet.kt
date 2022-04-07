@@ -3,7 +3,12 @@ package com.roman_kalinin.movies.network
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import com.roman_kalinin.movies.AppEvent
+import com.roman_kalinin.movies.EventBus
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.flow
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.IOException
@@ -32,10 +37,10 @@ class NoConnectionInternet @Inject constructor(private val context: Context) : I
                         connection.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR))
 
     }
+}
 
-    inner class NoConnectivityException : IOException() {
-        override val message: String
-            get() = "No network available, please check your WiFi or Data connection"
-    }
+class NoConnectivityException : IOException() {
 
+    override val message: String
+        get() = "No network available, please check your WiFi or Data connection"
 }
