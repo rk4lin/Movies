@@ -7,7 +7,6 @@ sealed class ViewState {
     object ConnectionError: ViewState()
     object Loaded: ViewState()
     object ErrorLoading: ViewState()
-
     data class Movies(
         val data: List<Movie>?
     ): ViewState()

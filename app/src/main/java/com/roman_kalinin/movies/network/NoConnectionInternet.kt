@@ -5,10 +5,9 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import com.roman_kalinin.movies.AppEvent
 import com.roman_kalinin.movies.EventBus
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.IOException
@@ -40,6 +39,12 @@ class NoConnectionInternet @Inject constructor(private val context: Context) : I
 }
 
 class NoConnectivityException : IOException() {
+
+    init{
+        CoroutineScope(Dispatchers.Default).launch{
+            EventBus.invokeEvent(AppEvent.NoConnection)
+        }
+    }
 
     override val message: String
         get() = "No network available, please check your WiFi or Data connection"

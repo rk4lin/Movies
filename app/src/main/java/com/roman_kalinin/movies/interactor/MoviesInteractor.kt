@@ -13,7 +13,7 @@ class MoviesInteractor @Inject constructor(
     private val dataBase: MoviesDataBase
 ) {
 
-    suspend fun getMovies(fromCache: Boolean) : List<Movie>?{
+    suspend fun getMovies(fromCache: Boolean) : List<Movie>? {
 
       if(fromCache) {
           val result =  getMoviesFromDatabase()

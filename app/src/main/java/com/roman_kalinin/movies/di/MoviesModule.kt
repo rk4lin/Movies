@@ -2,6 +2,7 @@ package com.roman_kalinin.movies.di
 
 import android.content.Context
 import androidx.room.Room
+import com.roman_kalinin.movies.EventBus
 import com.roman_kalinin.movies.database.MoviesDataBase
 import com.roman_kalinin.movies.database.dao.MoviesDao
 import com.roman_kalinin.movies.interactor.MoviesInteractor
@@ -65,4 +66,10 @@ object MoviesModule {
     fun provideMovieDatabase(@ApplicationContext context : Context) : MoviesDataBase{
         return Room.databaseBuilder(context, MoviesDataBase::class.java, "moviebase").build()
     }
+
+    @Provides
+    fun provideEventBus() : EventBus{
+        return EventBus
+    }
+
 }
