@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,20 +38,23 @@ class MainViewModel @Inject constructor(
 
         job = viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val result = interactor.getMovies(fromCache = true)
-
-                if (result != null && result.isNotEmpty()) {
-                    _movieList.emit(ViewState.Movies(result))
-                } else {
-                    _movieList.emit(ViewState.ErrorLoading)
-                }
-
-                withContext(Dispatchers.Default){
-                    eventBus.eventsFlow.filter {
-                        it == AppEvent.NoConnection
-                    }.collectLatest {
-                        _movieList.emit(ViewState.ConnectionError)
+                try {
+                    val result = interactor.getMovies(fromCache = true)
+                    if (result != null && result.isNotEmpty()) {
+                        _movieList.emit(ViewState.Movies(result))
+                    } else {
+                        _movieList.emit(ViewState.ErrorLoading)
                     }
+
+                    withContext(Dispatchers.Default){
+                        eventBus.eventsFlow.filter {
+                            it == AppEvent.NoConnection
+                        }.collectLatest {
+                            _movieList.emit(ViewState.ConnectionError)
+                        }
+                    }
+                }catch (exeption: IOException){
+                    _movieList.emit(ViewState.ConnectionError)
                 }
 
             }
