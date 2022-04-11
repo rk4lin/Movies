@@ -8,6 +8,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.roman_kalinin.movies.R
 import com.roman_kalinin.movies.databinding.ActivityMainBinding
 import com.roman_kalinin.movies.view.adpter.MainAdapter
 import com.roman_kalinin.movies.viewmodel.MainViewModel
@@ -49,12 +50,12 @@ class MainActivity : AppCompatActivity() {
                             adapter.submitList(viewState.data)
                         }
                         is ViewState.ErrorLoading->{
-                            binding.errorMessage.text = "Произошла ошибка загрузки. Пожалуйста проверте соединение"
+                            binding.errorMessage.text = resources.getString(R.string.download_error)
                         }
                         is ViewState.ConnectionError -> {
                             binding.recyclerview.visibility = View.GONE
                             binding.errorMessage.visibility = View.VISIBLE
-                            binding.errorMessage.text = "Соедиенние отсутствует"
+                            binding.errorMessage.text = resources.getString(R.string.no_connection_error)
                         }
 
                     }
